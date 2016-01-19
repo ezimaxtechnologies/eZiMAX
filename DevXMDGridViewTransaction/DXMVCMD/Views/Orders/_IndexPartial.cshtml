@@ -1,0 +1,59 @@
+@{
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridView";
+        settings.CallbackRouteValues = new { Controller = "Orders", Action = "IndexPartial" };
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Orders", Action = "IndexPartialAddNew" };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Orders", Action = "IndexPartialUpdate" };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Orders", Action = "IndexPartialDelete" };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+
+        settings.KeyFieldName = "ID";
+        settings.Width = Unit.Percentage(60);
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+        settings.Columns.Add("ID");
+        settings.Columns.Add("Name");
+        settings.Columns.Add("OrderDate", MVCxGridViewColumnType.DateEdit);
+        settings.Columns.Add("OrderTotal").PropertiesEdit.DisplayFormatString = "c";
+
+       
+
+        
+        settings.Settings.ShowColumnHeaders=true;
+
+        settings.SettingsDetail.ShowDetailRow = true;
+        settings.SettingsDetail.ShowDetailButtons = true;
+
+        settings.SetDetailRowTemplateContent(c=> {
+            Html.RenderAction("GridViewOrderDetail", new { OrderID = DataBinder.Eval(c.DataItem, "ID") });
+        });
+        
+        
+      
+
+
+        settings.Settings.ShowHeaderFilterButton = true;
+       // settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "OrderTotal");
+        settings.Settings.ShowFooter = true;
+
+       
+
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model.Source).GetHtml()

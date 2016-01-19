@@ -1,0 +1,59 @@
+@{
+    
+    int OrderIDVal = 0;
+
+
+    if (TempData["OrderID"] != null)
+    {
+        OrderIDVal = Convert.ToInt16( TempData["OrderID"].ToString());
+    }
+
+    
+    var grid = Html.DevExpress().GridView(settings =>
+    {
+        settings.Name = "GridViewOrderDetail_" + TempData["OrderID"];
+        settings.CallbackRouteValues = new { Controller = "Orders", Action = "GridViewOrderDetail" , OrderID=OrderIDVal};
+
+        settings.SettingsEditing.AddNewRowRouteValues = new { Controller = "Orders", Action = "GridViewOrderDetailAddNew", OrderID = OrderIDVal };
+        settings.SettingsEditing.UpdateRowRouteValues = new { Controller = "Orders", Action = "GridViewOrderDetailUpdate", OrderID = OrderIDVal };
+        settings.SettingsEditing.DeleteRowRouteValues = new { Controller = "Orders", Action = "GridViewOrderDetailDelete", OrderID=OrderIDVal };
+        settings.SettingsEditing.Mode = GridViewEditingMode.EditFormAndDisplayRow;
+        settings.SettingsBehavior.ConfirmDelete = true;
+
+        settings.CommandColumn.Visible = true;
+        settings.CommandColumn.ShowNewButton = true;
+        settings.CommandColumn.ShowDeleteButton = true;
+        settings.CommandColumn.ShowEditButton = true;
+        settings.Width = Unit.Percentage(100);
+        settings.KeyFieldName = "ID";
+
+        settings.SettingsPager.Visible = true;
+        settings.Settings.ShowGroupPanel = true;
+        settings.Settings.ShowFilterRow = true;
+        settings.SettingsBehavior.AllowSelectByRowClick = true;
+
+        settings.Columns.Add("Order");
+        settings.Columns.Add("ID");
+        settings.Columns.Add("ProductID");
+        settings.Columns.Add("Qty");
+        settings.Columns.Add("Price").PropertiesEdit.DisplayFormatString = "c";
+        settings.Columns.Add("Total").PropertiesEdit.DisplayFormatString = "c";
+        
+        //settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Qty");
+        //settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Price");
+        //settings.TotalSummary.Add(DevExpress.Data.SummaryItemType.Sum, "Total");
+
+        settings.DataBinding = (sender, e) =>
+        {
+            ((MVCxGridView)sender).ForceDataRowType(typeof(DXMVCMD.Models.OrderDetailsViewModel));
+        };
+
+        settings.Settings.ShowFooter = true;
+
+    });
+    if (ViewData["EditError"] != null)
+    {
+        grid.SetEditErrorText((string)ViewData["EditError"]);
+    }
+}
+@grid.Bind(Model).GetHtml()

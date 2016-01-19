@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "IndexPartial";
+}
+
+<h2>IndexPartial</h2>
+
+@{
+    Html.DevExpress().GridView(s =>
+    {
+        s.Name = "viewCustomers";
+        s.CallbackRouteValues = new { Controller = "Customers", Action = "IndexPartial" };
+        s.Columns.Add("ID");
+        s.Columns.Add("Name");
+        s.CommandColumn.Visible = true;
+        s.CommandColumn.ShowEditButton = true;
+        s.CommandColumn.ShowNewButton = true;
+        s.CommandColumn.ShowDeleteButton = true;
+        s.CommandColumn.ShowCancelButton = true;
+        s.SettingsBehavior.AllowSelectByRowClick = true;
+        
+        s.KeyFieldName = "ID";
+        s.Width = 450;
+
+        
+       
+        
+        s.Settings.ShowFilterRow = true;
+        s.Settings.ShowFilterRowMenu = true;
+
+        s.SettingsEditing.UpdateRowRouteValues = new { Controller = "Customers", Action = "EditCustomer" };
+        s.SettingsEditing.DeleteRowRouteValues = new { Controller = "Customers", Action = "EditDeleteCustomer" };
+        s.SettingsEditing.AddNewRowRouteValues = new { Controller = "Customers", Action = "EditCustomer" };
+   //     s.SettingsEditing.Mode = GridViewEditingMode.EditForm;
+        
+
+        //s.PreRender = (sender, e) =>
+        //{
+        //    ASPxGridView grid = (ASPxGridView)sender;
+        //    foreach (GridViewDataColumn col in grid.Columns)
+        //    {
+        //        col.Settings.AutoFilterCondition = AutoFilterCondition.Contains;
+        //    }
+        //};
+        
+
+    }
+
+        ).Bind(Model).GetHtml();
+}
+
